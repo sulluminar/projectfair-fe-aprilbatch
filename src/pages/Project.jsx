@@ -1,8 +1,27 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import ProjectCard from '../components/ProjectCard'
+import { getAllProjectApi } from '../services/allApi'
 
 function Project() {
+    const [allProject, setAllProject] = useState([])
+    const getAllProject = async () => {
+        if (sessionStorage.getItem("token")) {
+            const token = sessionStorage.getItem("token");
+            const reqHeader = {
+                "Content-Type": 'application/json',
+                "Authorization": `Bearer ${token}`
+            }
+            const result = await getAllProjectApi(reqHeader);
+            console.log("User Project");
+            console.log(result)
+            setAllProject(result.data)
+        }
+
+    }
+    useEffect(() => {
+        getAllProject()
+    }, [])
     return (
         <>
             <Header />
@@ -19,9 +38,17 @@ function Project() {
                 <div className='col-md-4'></div>
             </div>
             <div className='container row my-5 ms-5'>
-                <div className='col-md-3'>
-                    <ProjectCard/>
-                </div>
+
+                {
+                    allProject.length > 0 ?
+                        allProject.map((item) => (
+                            <div className='col-md-3'>
+                                <ProjectCard project={item} />
+                            </div>
+                        )) :
+                        <p>No Projects found</p>
+                }
+
             </div>
         </>
     )

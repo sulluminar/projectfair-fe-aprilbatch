@@ -6,8 +6,9 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { BASE_URL } from '../services/baseurl';
 
-function ProjectCard() {
+function ProjectCard({project}) {
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -15,35 +16,38 @@ function ProjectCard() {
     return (
         <>
             <Card style={{ width: '100%' }} onClick={handleShow}>
-                <Card.Img variant="top" src={media_player_img} />
+                <Card.Img variant="top" src={`${BASE_URL}/uploads/${project.projectImage}`}  height="200px"/>
                 <Card.Body>
-                    <Card.Title>Media Player</Card.Title>
+                    <Card.Title>{project.title}</Card.Title>
 
                 </Card.Body>
             </Card>
             <Modal show={show} onHide={handleClose} size="lg">
                 <Modal.Header closeButton>
-                    <Modal.Title>Media Player</Modal.Title>
+                    <Modal.Title>{project.title}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Row>
                         <Col md={6}>
-                            <img src={media_player_img} alt="" width='100%' />
+                            <img src={`${BASE_URL}/uploads/${project.projectImage}`} alt="" width='100%' />
                         </Col>
                         <Col md={6}>
                             <h4>Description:</h4>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis obcaecati sint nisi recusandae reprehenderit labore repellat, sed itaque consequatur est?</p>
+                            <p>{project.overview}</p>
                             <h4>Technologies</h4>
-                            <p>Languages:React, JavaScript, HTML, CSS </p>
+                            <p>{project.language} </p>
                         </Col>
                     </Row>
                 </Modal.Body>
                 <div className='d-flex mt-3 ms-3 mb-4'>
-                    <Link className='ms-5 me-3'>
-                        <i class="fa-brands fa-github fa-2x text-dark"></i>
+                    <Link className='ms-5 me-3' to={project.github} target='_blank'>
+                        <i class="fa-brands fa-github fa-2x text-dark">
+                        </i>
                     </Link>
-                    <Link className=''>
-                        <i class="fa-solid fa-link fa-2x text-dark"></i>
+                    <Link className=''to={project.website} target='_blank'>
+                        <i class="fa-solid fa-link fa-2x text-dark">
+                           
+                        </i>
                     </Link>
                 </div>
             </Modal>

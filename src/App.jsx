@@ -7,6 +7,8 @@ import Home from './pages/Home'
 import Auth from './pages/Auth'
 import Dashboard from './pages/Dashboard'
 import Project from './pages/Project'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -21,6 +23,7 @@ function App() {
         <Route path='/project' element={<Project/>} />
       </Routes>
       <Footer />
+      <ToastContainer />
     </>
   )
 }
