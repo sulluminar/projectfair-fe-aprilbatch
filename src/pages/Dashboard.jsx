@@ -5,9 +5,6 @@ import Profile from '../components/Profile'
 
 function Dashboard() {
   const userData = JSON.parse(sessionStorage.getItem("loggedUser"));
-  console.log("Logged user data");
-  console.log(userData)
-
   return (
     <>
       <Header />

@@ -1,9 +1,18 @@
 import React from 'react'
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Header() {
+    const navigate = useNavigate()
+    const handleLogout = ()=>{
+        // e.preventDefault()
+        if(sessionStorage.getItem('token')){
+            sessionStorage.removeItem('token');
+            sessionStorage.removeItem('loggedUser');
+            navigate('/')
+        }
+    }
     return (
         <>
             <Navbar className="bg-success rounded">
@@ -15,7 +24,7 @@ function Header() {
                         </Link>
 
                     </Navbar.Brand>
-                    <button className='btn btn-warning'><i class="fa-solid fa-power-off me-2"></i>Logout</button>
+                    <button className='btn btn-warning' onClick={handleLogout}><i class="fa-solid fa-power-off me-2"></i>Logout</button>
                 </Container>
             </Navbar>
         </>
