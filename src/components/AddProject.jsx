@@ -1,12 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { addProjectApi } from '../services/allApi';
+import { addProjectResponseContext } from '../context/ContextShare';
 
 function AddProject() {
     const [show, setShow] = useState(false);
     const [token, setToken] = useState("");
+    // useContext() hook os used to accesss state created inside contentShare
+    const {addProjectResponse, setAddProjectResponse}= useContext(addProjectResponseContext);
+
     useEffect(() => {
         if (sessionStorage.getItem("token")) {
             setToken(sessionStorage.getItem("token"))
@@ -55,6 +59,7 @@ function AddProject() {
             }
             const result = await addProjectApi(reqBody, reqHeader);
             if (result.status === 200) {
+                setAddProjectResponse(result.data)
                 alert(`${title} uploaded successfully`);
                 setProjectDetails(
                     {
