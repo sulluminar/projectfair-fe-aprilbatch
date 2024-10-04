@@ -1,14 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { BASE_URL } from '../services/baseurl';
 import { editUserProjectApi } from '../services/allApi';
+import { editprojectResponseContext } from '../context/ContextShare';
 
 function EditProject({ project }) {
     const [show, setShow] = useState(false);
     const [preview, setPreview] = useState("")
-
+    const {editprojectResponse, setEditProjectResponse }= useContext(editprojectResponseContext)
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     const [projectDetails, setProjectDetails] = useState({
@@ -46,6 +47,10 @@ function EditProject({ project }) {
                 const result = await editUserProjectApi(id, reqBody, reqHeader);
                 console.log("===update project result===");
                 console.log(result)
+                if (result.status === 200) {
+                    handleClose()
+                    setEditProjectResponse(result)
+                }
             }
             else {
                 const reqHeader = {
@@ -55,6 +60,10 @@ function EditProject({ project }) {
                 const result = await editUserProjectApi(id, reqBody, reqHeader);
                 console.log("===update project result===");
                 console.log(result)
+                if (result.status === 200) {
+                    handleClose();
+                    setEditProjectResponse(result)
+                }
             }
         }
     }
@@ -63,6 +72,19 @@ function EditProject({ project }) {
             setPreview(URL.createObjectURL(projectDetails.projectImage))
         }
     }, [projectDetails.projectImage])
+    const handleClose1 = () => {
+        handleClose();
+        setProjectDetails({
+            id: project._id,
+            title: project.title,
+            language: project.language,
+            github: project.github,
+            website: project.website,
+            overview: project.overview,
+            projectImage: ""
+        })
+        setPreview("")
+    }
     return (
         <>
             <i class="fa-regular fa-pen-to-square text-primary" onClick={handleShow}></i>
@@ -106,7 +128,7 @@ function EditProject({ project }) {
 
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="warning" onClick={handleClose}>
+                    <Button variant="warning" onClick={handleClose1}>
                         CANCEL
                     </Button>
                     <Button variant="success" onClick={handleUpdate}>

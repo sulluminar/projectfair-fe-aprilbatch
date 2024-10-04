@@ -2,12 +2,13 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AddProject from './AddProject'
 import EditProject from './EditProject'
-import { getUserProjectApi } from '../services/allApi'
-import { addProjectResponseContext } from '../context/ContextShare'
+import { deleteProjectApi, getUserProjectApi } from '../services/allApi'
+import { addProjectResponseContext, editprojectResponseContext } from '../context/ContextShare'
 
 function MyProject() {
     const [userProject, setuserProject] = useState([]);
-    const {addProjectResponse,setAddProjectResponse}= useContext(addProjectResponseContext)
+    const { editprojectResponse, setEditProjectResponse } = useContext(editprojectResponseContext)
+    const { addProjectResponse, setAddProjectResponse } = useContext(addProjectResponseContext)
     const getUserProjects = async () => {
         const token = sessionStorage.getItem("token");
         const reqHeader = {
@@ -21,7 +22,27 @@ function MyProject() {
     }
     useEffect(() => {
         getUserProjects()
-    }, [addProjectResponse])
+    }, [addProjectResponse, editprojectResponse])
+
+    const handleDelete = async (id) => {
+        const token = sessionStorage.getItem("token");
+        const reqHeader = {
+            "Content-Type": 'application/json',
+            "Authorization": `Bearer ${token}`
+        }
+        console.log("reqHeader");
+        console.log(reqHeader)
+        const result = await deleteProjectApi(id, reqHeader)
+        console.log("delete resposne");
+        console.log(result)
+        if (result.status === 200) {
+            alert("Project deleted successfully");
+            getUserProjects()
+        }
+        else {
+            alert("Something went wrong")
+        }
+    }
     return (
         <>
             <div className='shadow p-5 mb-5'>
@@ -37,17 +58,17 @@ function MyProject() {
                                 <h5>{item.title}</h5>
 
                                 <div className='d-flex ms-auto align-items-center'>
-                                    <EditProject  project={item} />
-                                    <Link className='ms-3 text-success'>
+                                    <EditProject project={item} />
+                                    <a href={item.website} target='_blank' className='btn'>
                                         <i class="fa-solid fa-link"></i>
-                                    </Link>
-                                    <Link className='ms-3 text-warning'>
-                                        <i class="fa-brands fa-github"></i>
-                                    </Link>
-                                    <Link className='ms-3 text-danger'>
-                                        <i class="fa-solid fa-trash"></i>
-                                    </Link>
+                                    </a>
+                                    <a href={item.github} target='_blank'
+                                        className='btn'><i class="fa-brands fa-github"></i></a>
 
+                                    <button className='btn' onClick={() => handleDelete(item._id)}>
+                                        <i class="fa-solid fa-trash text-danger"></i>
+                                    </button>
+                                    
                                 </div>
                             </div>
 
